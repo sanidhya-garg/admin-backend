@@ -8,17 +8,14 @@ job_router.put('/:job_id/approval', async (req: Request, res: Response) => {
         const jobId: string = req.params.job_id;
         const approval : string | undefined  = req.body.approval;
 
-        if (!approval || !['pending', 'approved', 'disapproved'].includes(approval)) {
+        if (!approval || !['pending', 'approved', 'disapproved'].includes(approval))
             return res.status(400).send({ message: 'Invalid approval status' });
-        }
 
         const updatedJob = await Job.findByIdAndUpdate(jobId, { approval }, { new: true });
-
-        if (!updatedJob) {
-            return res.status(404).send({ message: 'Job not found' });
-        }
-
+        if (!updatedJob) return res.status(404).send({ message: 'Job not found' });
+        
         res.send(updatedJob);
+    
     } catch (error : any) {
         console.log("error in job.ts PUT /:job_id/approval")
         console.log(error)

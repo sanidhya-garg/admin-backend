@@ -1,10 +1,10 @@
-import mongoose, { model, connect } from 'mongoose';
-import { IStartup, IJob, IStudent, Startup, Job, Student } from './models';
+import mongoose from 'mongoose';
+// import { IStartup, IJob, IStudent, Startup, Job, Student } from './models';
 
 // 1. Create an interface representing a document in MongoDB.
 
-mongoose.connection.once('connected', () => console.log("Connected to Database"))
-mongoose.connection.on('disconnected', () => console.log("Disconnected from Database"))
+mongoose.connection.once('connected', () => console.log("Connected to MongoDB"))
+mongoose.connection.on('disconnected', () => console.log("Disconnected from MongoDB"))
 mongoose.connection.on('error', (err) => console.error('MongoDB Connection Error:', err))
 mongoose.connection.on('timeout', () => console.error('MongoDB connection timeout'))
 mongoose.connection.on('reconnecting', () => console.log("Reconnecting to MongoDB"))
