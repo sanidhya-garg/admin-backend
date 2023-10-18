@@ -3,6 +3,20 @@ import { Job } from '../database/models';
 
 const job_router = express.Router();
 
+
+job_router.post("/", async (req : Request, res : Response) => {
+    try{
+        const JobList = await Job.find();
+        res.json(JobList)
+    }
+    catch (error : any) {
+        console.log("error in job.ts GET /")
+        console.log(error)
+        res.status(500).send({message : "Server error", error : error.message || "Internal Server Error"})
+
+    }
+})
+
 job_router.put('/:job_id/approval', async (req: Request, res: Response) => {
     try {
         const jobId: string = req.params.job_id;
