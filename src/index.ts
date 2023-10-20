@@ -1,16 +1,20 @@
 import dotenv from "dotenv"
+import cors from "cors"
 dotenv.config()
 
 import express  from "express";
 import { authenticationMiddleware } from "./authentication";
 import { mongoConnecter } from "./database";
 import { job_router } from "./routes/job";
+import { auth_router } from "./routes/auth";
 
 const app = express()
+app.use(cors())
 app.use(express.json({ limit: '1mb' }))
 app.use(express.urlencoded({extended : true})) // TODO 
 app.use(authenticationMiddleware)
 app.use('/job', job_router)
+app.use('/auth', auth_router)
 
 mongoConnecter.connect(process.env.DATABASE_URL || "")
 
