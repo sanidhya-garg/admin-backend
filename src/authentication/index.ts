@@ -20,6 +20,12 @@ const authenticationMiddleware = (req : Request, res : Response, next : NextFunc
 
     // If the token is valid, you can access the payload (decoded) in subsequent middleware or route handlers
     (req as any).user = decoded;
+    if(req.body.userID){
+      if(req.body.userID !== (decoded as any).userId.toString()){
+          return res.status(401).json({ message: 'Unauthorized - Invalid token' });
+      }
+    }
+
     next();
   });
 };

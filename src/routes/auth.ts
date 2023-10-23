@@ -61,8 +61,9 @@ auth_router.post('/register', async (req, res) => {
   
     // Generate a JWT token
     const token = jwt.sign({ userId: admin._id }, 'your-secret-key');
+    const userID = admin._id;
   
-    res.json({ token });
+    res.json({ token, userID });
   });
 
 
