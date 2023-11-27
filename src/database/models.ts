@@ -50,6 +50,7 @@ export interface IStudent extends Document {
     department: string;
     resumeLink: string;
     year: string;
+    isVerified: boolean;
 }
 
 // Student Schema
@@ -65,7 +66,8 @@ const StudentSchema: Schema = new Schema({
     course: { type: String, required: true },
     department: { type: String, required: true },
     resumeLink: { type: String, required: true },
-    year: { type: String, required: true }
+    year: { type: String, required: true },
+    isVerified: { type: Boolean, required: true, default: false }
 });
 
 export const Student = mongoose.model<IStudent>('Student', StudentSchema);
