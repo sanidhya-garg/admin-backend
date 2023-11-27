@@ -13,7 +13,6 @@ job_router.post("/", async (req : Request, res : Response) => {
         console.log("error in job.ts GET /")
         console.log(error)
         res.status(500).send({message : "Server error", error : error.message || "Internal Server Error"})
-
     }
 })
 

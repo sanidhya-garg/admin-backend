@@ -18,6 +18,5 @@ app.use('/job', job_router)
 
 mongoConnecter.connect(process.env.DATABASE_URL || "")
 
-
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => console.log(`Listening on Port ${PORT}`))
