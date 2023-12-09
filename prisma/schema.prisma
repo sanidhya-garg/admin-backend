@@ -14,13 +14,14 @@ model admin {
 }
 
 model founder {
-  id        Int     @id @default(autoincrement())
+  id        Int     
   name      String?
   bio       String?
   linkedIn  String?
   website   String?
   startupId String
   startup   startup @relation(fields: [startupId], references: [id], onDelete: Cascade)
+  @@id([id, startupId])
 }
 
 model job {
@@ -88,4 +89,5 @@ model studentApplication {
   whyShouldWeHireYou String?
   job                job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
   student            student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  @@unique([jobId, studentId])
 }

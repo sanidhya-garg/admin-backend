@@ -9,14 +9,14 @@ CREATE TABLE "admin" (
 
 -- CreateTable
 CREATE TABLE "founder" (
-    "id" SERIAL NOT NULL,
+    "id" INTEGER NOT NULL,
     "name" TEXT,
     "bio" TEXT,
     "linkedIn" TEXT,
     "website" TEXT,
     "startupId" TEXT NOT NULL,
 
-    CONSTRAINT "founder_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "founder_pkey" PRIMARY KEY ("id","startupId")
 );
 
 -- CreateTable
@@ -114,6 +114,9 @@ CREATE UNIQUE INDEX "student_email_key" ON "student"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "studentApplication_id_key" ON "studentApplication"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "studentApplication_jobId_studentId_key" ON "studentApplication"("jobId", "studentId");
 
 -- AddForeignKey
 ALTER TABLE "founder" ADD CONSTRAINT "founder_startupId_fkey" FOREIGN KEY ("startupId") REFERENCES "startup"("id") ON DELETE CASCADE ON UPDATE CASCADE;
