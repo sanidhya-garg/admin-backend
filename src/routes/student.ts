@@ -1,11 +1,12 @@
 import express, { Request, Response } from 'express';
-import { Student } from '../database/models';
-
+// import { Student } from '../database/models';
+import prisma from '../../prisma/prisma'
 const student_router = express.Router();
 
 student_router.post("/", async (req : Request, res : Response) => {
     try{
-        const StudentList = await Student.find();
+        // const StudentList = await Student.find();
+        const StudentList = await prisma.student.findMany();
         res.json(StudentList)
     }
     catch (error : any) {
@@ -22,7 +23,15 @@ student_router.put('/:student_id/approval', async (req: Request, res: Response) 
         const approval : boolean | undefined  = req.body.verified;
         if(approval === undefined)
             return res.status(400).send({message : "Invalid verified status status"});
-        const  updatedProfile= await Student.findByIdAndUpdate(StudentId, {isVerified:approval}, {new : true});
+        // const  updatedProfile= await Student.findByIdAndUpdate(StudentId, {isVerified:approval}, {new : true});
+        const updatedProfile = await prisma.student.update({
+            where : {
+                id : StudentId
+            },
+            data : {
+                isVerified : approval
+            }
+        })
         if(!updatedProfile) return res.status(404).send({message : "Student not found"});
         res.send(updatedProfile);
     } catch(error: any){

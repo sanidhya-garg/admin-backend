@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
-import { Admin } from '../database/models';
-import { IAdmin } from '../database/models';
+// import { Admin } from '../database/models';
+// import { IAdmin } from '../database/models';
+import prisma from '../../prisma/prisma';
 import jwt from 'jsonwebtoken';
 
 const auth_router = express.Router();
@@ -18,8 +19,12 @@ auth_router.post('/', async (req: Request, res: Response) => {
     }
 });
 
-
-auth_router.post('/register', async (req, res) => {
+interface RegisterRequestBody {
+  username: string;
+  password: string;
+  superUserCode: string;
+}
+auth_router.post('/register', async (req: Request<{}, {}, RegisterRequestBody>, res) => {
     const { username, password, superUserCode } = req.body;
 
     if (superUserCode !== process.env.SUPER_USER_CODE) {
@@ -29,13 +34,18 @@ auth_router.post('/register', async (req, res) => {
     // Hash the password before storing it in the database
     const hashedPassword = await bcrypt.hash(password, 10);
   
-    const admin = new Admin({
-      username,
-      password: hashedPassword,
-    });
-  
+    // const admin = new Admin({
+    //   username,
+    //   password: hashedPassword,
+    // });
     try {
-      await admin.save();
+      // await admin.save();
+      await prisma.admin.create({
+        data: {
+          username: username,
+          password: hashedPassword,
+        },
+      });
       res.status(201).send('Admin registered successfully');
     } catch (err) {
       res.status(500).send('Registration failed');
@@ -47,8 +57,12 @@ auth_router.post('/register', async (req, res) => {
   auth_router.post('/login', async (req, res) => {
     const { username, password } = req.body;
   
-    const admin: IAdmin | null = await Admin.findOne({ username });
-  
+    // const admin: IAdmin | null = await Admin.findOne({ username });
+    const admin = await prisma.admin.findUnique({
+      where: {
+        username: username
+      }
+    })
     if (!admin) {
       return res.status(404).send('Admin not found');
     }
@@ -60,8 +74,8 @@ auth_router.post('/register', async (req, res) => {
     }
   
     // Generate a JWT token
-    const token = jwt.sign({ userId: admin._id }, 'your-secret-key');
-    const userID = admin._id;
+    const token = jwt.sign({ userId: admin.id }, 'your-secret-key');
+    const userID = admin.id;
   
     res.json({ token, userID });
   });

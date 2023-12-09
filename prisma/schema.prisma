@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL_POSTGRESQL")
+}
+
+model admin {
+  password String
+  username String @unique
+  id       String @id @unique @default(uuid())
+}
+
+model founder {
+  id        Int     @id @default(autoincrement())
+  name      String?
+  bio       String?
+  linkedIn  String?
+  website   String?
+  startupId String
+  startup   startup @relation(fields: [startupId], references: [id], onDelete: Cascade)
+}
+
+model job {
+  id                 String               @id @unique
+  companyName        String?
+  startupId          String
+  designation        String?
+  type               String?
+  stipend            String?
+  noOfOffers         String?
+  skillsRequired     String?
+  jobLocation        String?
+  responsibilities   String?
+  assignment         String?
+  deadline           String?
+  selectionProcess   String?
+  startUpId          String?
+  createdAt          String?
+  approval           String?
+  duration           String?
+  startup            startup              @relation(fields: [startupId], references: [id], onDelete: Cascade)
+  studentApplication studentApplication[]
+}
+
+model startup {
+  id            String    @id @unique
+  companyName   String?
+  email         String    @unique
+  otp           String?
+  linkedIn      String?
+  website       String?
+  tracxn        String?
+  social        String?
+  cruchbase     String?
+  sector        String?
+  noOfEmployees String?
+  companyVision String?
+  hrName        String?
+  hrEmail       String?
+  hrDesignation String?
+  founder       founder[]
+  job           job[]
+}
+
+model student {
+  id                 String               @id @unique
+  name               String?
+  email              String               @unique
+  otp                String?
+  course             String?
+  department         String?
+  year               String?
+  cgpa               String?
+  resumeLink         String?
+  linkedIn           String?
+  isVerified         Boolean              @default(false)
+  studentApplication studentApplication[]
+}
+
+model studentApplication {
+  id                 String  @id @unique
+  studentId          String
+  jobId              String
+  status             String?
+  whyShouldWeHireYou String?
+  job                job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  student            student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
