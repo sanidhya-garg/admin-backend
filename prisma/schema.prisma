@@ -85,7 +85,7 @@ model studentApplication {
   id                 String  @id @unique
   studentId          String
   jobId              String
-  status             String?
+  status             String  @default("Applied")
   whyShouldWeHireYou String?
   job                job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
   student            student @relation(fields: [studentId], references: [id], onDelete: Cascade)
