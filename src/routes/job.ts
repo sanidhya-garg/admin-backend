@@ -1,12 +1,13 @@
 import express, { Request, Response } from 'express';
-import { Job } from '../database/models';
-
+// import { Job } from '../database/models';
+import prisma from '../../prisma/prisma'
 const job_router = express.Router();
 
 
 job_router.post("/", async (req : Request, res : Response) => {
     try{
-        const JobList = await Job.find();
+        // const JobList = await Job.find();
+        const JobList = await prisma.job.findMany();
         res.json(JobList)
     }
     catch (error : any) {
@@ -24,7 +25,15 @@ job_router.put('/:job_id/approval', async (req: Request, res: Response) => {
         if (!approval || !['pending', 'approved', 'disapproved'].includes(approval))
             return res.status(400).send({ message: 'Invalid approval status' });
 
-        const updatedJob = await Job.findByIdAndUpdate(jobId, { approval }, { new: true });
+        // const updatedJob = await Job.findByIdAndUpdate(jobId, { approval }, { new: true });
+        const updatedJob = await prisma.job.update({
+            where : {
+                id : jobId
+            },
+            data : {
+                approval : approval
+            }
+        })
         if (!updatedJob) return res.status(404).send({ message: 'Job not found' });
         
         res.send(updatedJob);
