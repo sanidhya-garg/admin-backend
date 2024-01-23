@@ -3,24 +3,26 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL_POSTGRESQL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL_POSTGRESQL")
+  directUrl = env("DIRECT_URL_POSTGRESQL")
 }
 
 model admin {
-  password String
-  username String @unique
   id       String @id @unique @default(uuid())
+  username String @unique
+  password String
 }
 
 model founder {
-  id        Int     
+  id        Int
   name      String?
   bio       String?
   linkedIn  String?
   website   String?
   startupId String
   startup   startup @relation(fields: [startupId], references: [id], onDelete: Cascade)
+
   @@id([id, startupId])
 }
 
@@ -30,6 +32,7 @@ model job {
   startupId          String
   designation        String?
   type               String?
+  duration           String?
   stipend            String?
   noOfOffers         String?
   skillsRequired     String?
@@ -41,7 +44,6 @@ model job {
   startUpId          String?
   createdAt          String?
   approval           String?
-  duration           String?
   startup            startup              @relation(fields: [startupId], references: [id], onDelete: Cascade)
   studentApplication studentApplication[]
 }
@@ -89,5 +91,6 @@ model studentApplication {
   whyShouldWeHireYou String?
   job                job     @relation(fields: [jobId], references: [id], onDelete: Cascade)
   student            student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
   @@unique([jobId, studentId])
 }
