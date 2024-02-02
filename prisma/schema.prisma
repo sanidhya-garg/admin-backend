@@ -64,6 +64,7 @@ model startup {
   hrName        String?
   hrEmail       String?
   hrDesignation String?
+  // iitdStartup   Boolean   @default(false)
   founder       founder[]
   job           job[]
 }
@@ -79,7 +80,8 @@ model student {
   cgpa               String?
   resumeLink         String?
   linkedIn           String?
-  isVerified         Boolean              @default(false)
+  isVerified         Boolean              @default(true)
+  resumeId           String?
   studentApplication studentApplication[]
 }
 
