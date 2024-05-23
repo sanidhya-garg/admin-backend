@@ -82,6 +82,7 @@ model student {
   linkedIn           String?
   isVerified         Boolean              @default(true)
   resumeId           String?
+  college            String?
   studentApplication studentApplication[]
 }
 
@@ -96,3 +97,5 @@ model studentApplication {
 
   @@unique([jobId, studentId])
 }
+
+// TODO create a model named college
