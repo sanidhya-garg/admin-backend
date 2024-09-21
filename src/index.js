@@ -17,6 +17,7 @@ app.use('/auth', auth_router);
 app.use(authenticationMiddleware);
 app.use('/job', job_router);
 app.use('/student', student_router);
+
 // mongoConnecter.connect(process.env.DATABASE_URL || "");
 
 const PORT = process.env.PORT || 3000;

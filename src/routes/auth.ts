@@ -7,6 +7,13 @@ import jwt from 'jsonwebtoken';
 
 const auth_router = express.Router();
 
+
+auth_router.get('/', async (req: Request, res: Response) => {
+ 
+      res.status(200).send({ message: 'Hello i AM READY'});
+  
+});
+
 auth_router.post('/', async (req: Request, res: Response) => {
     try {
         // the code has already been aproved till this point
@@ -24,61 +31,108 @@ interface RegisterRequestBody {
   password: string;
   superUserCode: string;
 }
-auth_router.post('/register', async (req: Request<{}, {}, RegisterRequestBody>, res) => {
-    const { username, password, superUserCode } = req.body;
 
-    if (superUserCode !== process.env.SUPER_USER_CODE) {
-      return res.status(401).send('Unauthorized');
-    }
-  
-    // Hash the password before storing it in the database
-    const hashedPassword = await bcrypt.hash(password, 10);
-  
-    // const admin = new Admin({
-    //   username,
-    //   password: hashedPassword,
-    // });
-    try {
-      // await admin.save();
-      await prisma.admin.create({
-        data: {
-          username: username,
-          password: hashedPassword,
-        },
-      });
-      res.status(201).send('Admin registered successfully');
-    } catch (err) {
-      res.status(500).send('Registration failed');
-    }
-  });
 
+auth_router.post('/register', async (req, res) => {
+  const { username, password, superUserCode } = req.body;
+  console.log(req.body);
+
+  if (superUserCode !== process.env.SUPER_USER_CODE) {
+    return res.status(401).send('Unauthorized');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    const existingAdmin = await prisma.admin.findUnique({ where: { username } });
+    if (existingAdmin) {
+      return res.status(400).send('Username already taken');
+    }
+
+    await prisma.admin.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
+    res.status(201).send({ message: 'Admin registered successfully' });
+  } catch (err) {
+    console.error('Error during admin registration:', err);  // Log the error
+    res.status(500).send('Registration failed');
+  }
+});
+
+
+
+
+  // auth_router.post('/login', async (req, res) => {
+  //   const { username, password } = req.body;
+
+  
+  //   // const admin: IAdmin | null = await Admin.findOne({ username });
+  //   const admin = await prisma.admin.findUnique({
+  //     where: {
+  //       username: username
+  //     }
+  //   })
+  //   if (!admin) {
+  //     return res.status(404).send('Admin not found');
+  //   }
+  
+  //   const isPasswordValid = await bcrypt.compare(password, admin.password);
+  
+  //   if (!isPasswordValid) {
+  //     return res.status(401).send('Invalid password');
+  //   }
+  
+  //   // Generate a JWT token
+  //   const token = jwt.sign({ userId: admin.id }, 'your-secret-key');
+  //   const userID = admin.id;
+  
+  //   res.json({ token, userID });
+  // });
 
 
   auth_router.post('/login', async (req, res) => {
     const { username, password } = req.body;
+    console.log(req.body);
+    
   
-    // const admin: IAdmin | null = await Admin.findOne({ username });
-    const admin = await prisma.admin.findUnique({
-      where: {
-        username: username
+    try {
+      // Check if admin exists
+      const admin = await prisma.admin.findUnique({
+        where: {
+          username: username
+        }
+      });
+      
+      if (!admin) {
+        return res.status(404).json({ message: 'Admin not found' });
       }
-    })
-    if (!admin) {
-      return res.status(404).send('Admin not found');
-    }
   
-    const isPasswordValid = await bcrypt.compare(password, admin.password);
+      // Verify password
+      const isPasswordValid = await bcrypt.compare(password, admin.password);
+      
+      if (!isPasswordValid) {
+        return res.status(401).json({ message: 'Invalid password' });
+      }
   
-    if (!isPasswordValid) {
-      return res.status(401).send('Invalid password');
-    }
-  
-    // Generate a JWT token
-    const token = jwt.sign({ userId: admin.id }, 'your-secret-key');
-    const userID = admin.id;
-  
-    res.json({ token, userID });
-  });
+      // Generate a JWT token (Use an environment variable for the secret key)
+      const token = jwt.sign({ userId: admin.id }, process.env.JWT_SECRET || 'default-secret-key');
+      
+      const userID = admin.id;
 
+      console.log({ token, userID });
+      
+  
+      // Respond with the token and user ID
+      return res.status(201).json({ token, userID });
+      
+    } catch (err) {
+      console.error('Error during admin login:', err);
+      return res.status(500).json({ message: 'Login failed'});
+    }
+  });
+  
 
 export {auth_router}
