@@ -1,15 +1,16 @@
 {
   "name": "unipace-admin",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.ts",
+  "description": "Admin panel for Unipace e-commerce platform",
+  "main": "dist/index.js", 
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node src/index.ts",
+    "build": "tsc",                         
+    "start": "node dist/index.js",          
     "dev": "nodemon --exec ts-node src/index.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Your Name",
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.7.0",
