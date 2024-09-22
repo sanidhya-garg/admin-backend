@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.student_router = void 0;
 const express_1 = __importDefault(require("express"));
 // import { Student } from '../database/models';
-const prisma_1 = __importDefault(require("../prisma/prisma"));
+const prisma_1 = __importDefault(require("../../prisma/prisma"));
 const student_router = express_1.default.Router();
 exports.student_router = student_router;
 student_router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.job_router = void 0;
 const express_1 = __importDefault(require("express"));
 // import { Job } from '../database/models';
-const prisma_1 = __importDefault(require("../prisma/prisma"));
+const prisma_1 = __importDefault(require("../../prisma/prisma"));
 const job_router = express_1.default.Router();
 exports.job_router = job_router;
 job_router.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

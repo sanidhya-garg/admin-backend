@@ -17,7 +17,7 @@ const express_1 = __importDefault(require("express"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 // import { Admin } from '../database/models';
 // import { IAdmin } from '../database/models';
-const prisma_1 = __importDefault(require("../prisma/prisma"));
+const prisma_1 = __importDefault(require("../../prisma/prisma"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const auth_router = express_1.default.Router();
 exports.auth_router = auth_router;

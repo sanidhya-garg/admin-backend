@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 // import { Student } from '../database/models';
-import prisma from '../prisma/prisma'
+import prisma from '../../prisma/prisma'
 const student_router = express.Router();
 
 student_router.post("/", async (req : Request, res : Response) => {

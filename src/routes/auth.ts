@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 // import { Admin } from '../database/models';
 // import { IAdmin } from '../database/models';
-import prisma from '../prisma/prisma';
+import prisma from "../../prisma/prisma";
 import jwt from 'jsonwebtoken';
 
 const auth_router = express.Router();

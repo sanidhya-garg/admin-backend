@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 // import { Job } from '../database/models';
-import prisma from '../prisma/prisma'
+import prisma from '../../prisma/prisma'
 const job_router = express.Router();
 
 
