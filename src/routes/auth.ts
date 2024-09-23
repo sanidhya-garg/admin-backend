@@ -34,7 +34,7 @@ interface RegisterRequestBody {
 
 
 auth_router.post('/register', async (req, res) => {
-  const { username, password, superUserCode } = req.body;
+  const { username, password, superUserCode }: RegisterRequestBody = req.body;
   console.log(req.body);
 
   if (superUserCode !== process.env.SUPER_USER_CODE) {
@@ -55,6 +55,7 @@ auth_router.post('/register', async (req, res) => {
         password: hashedPassword,
       },
     });
+
     res.status(201).send({ message: 'Admin registered successfully' });
   } catch (err) {
     console.error('Error during admin registration:', err);  // Log the error
@@ -64,38 +65,8 @@ auth_router.post('/register', async (req, res) => {
 
 
 
-
-  // auth_router.post('/login', async (req, res) => {
-  //   const { username, password } = req.body;
-
-  
-  //   // const admin: IAdmin | null = await Admin.findOne({ username });
-  //   const admin = await prisma.admin.findUnique({
-  //     where: {
-  //       username: username
-  //     }
-  //   })
-  //   if (!admin) {
-  //     return res.status(404).send('Admin not found');
-  //   }
-  
-  //   const isPasswordValid = await bcrypt.compare(password, admin.password);
-  
-  //   if (!isPasswordValid) {
-  //     return res.status(401).send('Invalid password');
-  //   }
-  
-  //   // Generate a JWT token
-  //   const token = jwt.sign({ userId: admin.id }, 'your-secret-key');
-  //   const userID = admin.id;
-  
-  //   res.json({ token, userID });
-  // });
-
-
   auth_router.post('/login', async (req, res) => {
     const { username, password } = req.body;
-    console.log(req.body);
     
   
     try {
